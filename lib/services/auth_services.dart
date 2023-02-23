@@ -81,6 +81,28 @@ class AuthServices {
     }
   }
 
+  Future<void> logout() async {
+    try {
+      final token = await getToken();
+
+      final res = await http.post(
+        Uri.parse('$baseUrl/logout'),
+        headers: {
+          'Authorization': token,
+        },
+      );
+
+      if (res.statusCode == 200) {
+        // clear data in storage
+        await clearLocalStorage();
+      } else {
+        throw jsonDecode(res.body)['message'];
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Auto Login
   Future<void> storeCredentialToLocal(UserModel user) async {
     try {
@@ -121,7 +143,7 @@ class AuthServices {
 
     if (value != null) {
       token = 'Bearer $value';
-      // token = 'Bearer' + value;
+      // token = 'Bearer$value';
     }
     return token;
   }

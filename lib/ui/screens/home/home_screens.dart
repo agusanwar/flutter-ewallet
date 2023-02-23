@@ -1,3 +1,4 @@
+import 'package:aipay/blocs/auth/auth_bloc.dart';
 import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/widgets/home_card_information_widget.dart';
@@ -9,6 +10,7 @@ import 'package:aipay/ui/widgets/home_tips_item_widget.dart';
 import 'package:aipay/ui/widgets/home_user_transaction_item_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreens extends StatefulWidget {
   const HomeScreens({super.key});
@@ -33,48 +35,59 @@ class _HomeScreensState extends State<HomeScreens> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/logo.png',
-                            width: 30,
-                          ),
-                          Text(
-                            'E PAY',
-                            style: whiteTextStyle.copyWith(
-                              fontSize: 18,
-                              fontWeight: bold,
-                              letterSpacing: 3,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 25),
-                        child: Row(
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthSuccess) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Welcome, ',
-                              style: grayTextStyle.copyWith(
-                                fontSize: 12,
-                                fontWeight: regular,
-                              ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                    width: 30,
+                                  ),
+                                ),
+                                const SizedBox(width: 5.0),
+                                Text(
+                                  'E PAY',
+                                  style: whiteTextStyle.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: bold,
+                                    letterSpacing: 3,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              // state.user.name!.toString().toUpperCase(),
-                              'adita',
-                              style: whiteTextStyle.copyWith(
-                                fontSize: 18,
-                                fontWeight: bold,
+                            Container(
+                              margin: const EdgeInsets.only(left: 25),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Welcome, ',
+                                    style: grayTextStyle.copyWith(
+                                      fontSize: 12,
+                                      fontWeight: regular,
+                                    ),
+                                  ),
+                                  Text(
+                                    // state.user.name!.toString().toUpperCase(),
+                                    state.user.name!.toString().toUpperCase(),
+                                    style: whiteTextStyle.copyWith(
+                                      fontSize: 18,
+                                      fontWeight: bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                    ],
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 15),
@@ -143,184 +156,194 @@ class _HomeScreensState extends State<HomeScreens> {
                       image: AssetImage('assets/images/img_card.png'),
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'E PAY',
-                        style: whiteTextStyle.copyWith(
-                          fontSize: 12,
-                          fontWeight: semiBold,
-                        ),
-                      ),
-                      Text(
-                        'Saldo',
-                        style: whiteTextStyle.copyWith(
-                          fontWeight: semiBold,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                formatCurrency(5000),
-                                // formatCurrency(state.user.balance ?? 0),
-                                style: whiteTextStyle.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: semiBold,
-                                  letterSpacing: 2,
-                                ),
+                  child: BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthSuccess) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'E PAY',
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 12,
+                                fontWeight: semiBold,
                               ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Icon(
-                                Icons.remove_red_eye_sharp,
-                                size: 20,
-                                color: kWhiteColor,
-                              ),
-                            ],
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: kWhiteColor.withOpacity(0.8),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
+                            Text(
+                              'Saldo',
+                              style: whiteTextStyle.copyWith(
+                                fontWeight: semiBold,
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: kPurpleColor,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'P',
-                                        style: whiteTextStyle.copyWith(
-                                          fontSize: 20,
-                                          fontWeight: extraBold,
-                                        ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      formatCurrency(state.user.balance ?? 0),
+                                      // formatCurrency(state.user.balance ?? 0),
+                                      style: whiteTextStyle.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: semiBold,
+                                        letterSpacing: 2,
                                       ),
                                     ),
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Icon(
+                                      Icons.remove_red_eye_sharp,
+                                      size: 20,
+                                      color: kWhiteColor,
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: kWhiteColor.withOpacity(0.8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: kPurpleColor,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'P',
+                                              style: whiteTextStyle.copyWith(
+                                                fontSize: 20,
+                                                fontWeight: extraBold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          '120 Point',
+                                          style: purpleTextStyle.copyWith(
+                                            fontSize: 16,
+                                            fontWeight: semiBold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.transparent,
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Level 1',
+                                        style: whiteTextStyle.copyWith(
+                                          fontWeight: medium,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '55 % ',
+                                        style: blueTextStyle.copyWith(
+                                          fontWeight: medium,
+                                        ),
+                                      ),
+                                      Text(
+                                        'of ${formatCurrency(20000)}',
+                                        // 'of ${formatCurrency(10000)}',
+                                        style: whiteTextStyle.copyWith(
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(
-                                    width: 5,
+                                    height: 5,
                                   ),
-                                  Text(
-                                    '120 Point',
-                                    style: purpleTextStyle.copyWith(
-                                      fontSize: 16,
-                                      fontWeight: semiBold,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(55),
+                                    child: LinearProgressIndicator(
+                                      value: 0.55,
+                                      minHeight: 7,
+                                      valueColor:
+                                          AlwaysStoppedAnimation(kPurpleColor),
+                                      backgroundColor: kLightBackgraundColor,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.transparent,
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Level 1',
-                                  style: whiteTextStyle.copyWith(
-                                    fontWeight: medium,
-                                  ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 20),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    HomeCardServicesItem(
+                                      imageUrl: 'assets/icons/ic_topup.png',
+                                      title: 'Top Up',
+                                      color: kGraySoftColor,
+                                      onTap: () {
+                                        Navigator.pushNamed(context, '/top-up');
+                                      },
+                                    ),
+                                    HomeCardServicesItem(
+                                      imageUrl: 'assets/icons/ic_send.png',
+                                      title: 'Transfer',
+                                      color: kGraySoftColor,
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, '/transfer');
+                                      },
+                                    ),
+                                    HomeCardServicesItem(
+                                      imageUrl: 'assets/icons/ic_withdraw.png',
+                                      title: 'Tarik Tunai',
+                                      color: kGraySoftColor,
+                                      onTap: () {},
+                                    ),
+                                    HomeCardServicesItem(
+                                      imageUrl: 'assets/icons/ic_history.png',
+                                      title: 'More',
+                                      color: kGraySoftColor,
+                                      onTap: () {},
+                                    ),
+                                  ],
                                 ),
-                                const Spacer(),
-                                Text(
-                                  '55 % ',
-                                  style: blueTextStyle.copyWith(
-                                    fontWeight: medium,
-                                  ),
-                                ),
-                                Text(
-                                  'of ${formatCurrency(20000)}',
-                                  // 'of ${formatCurrency(10000)}',
-                                  style: whiteTextStyle.copyWith(
-                                    fontWeight: semiBold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(55),
-                              child: LinearProgressIndicator(
-                                value: 0.55,
-                                minHeight: 7,
-                                valueColor:
-                                    AlwaysStoppedAnimation(kPurpleColor),
-                                backgroundColor: kLightBackgraundColor,
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              HomeCardServicesItem(
-                                imageUrl: 'assets/icons/ic_topup.png',
-                                title: 'Top Up',
-                                color: kGraySoftColor,
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/top-up');
-                                },
-                              ),
-                              HomeCardServicesItem(
-                                imageUrl: 'assets/icons/ic_send.png',
-                                title: 'Transfer',
-                                color: kGraySoftColor,
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/transfer');
-                                },
-                              ),
-                              HomeCardServicesItem(
-                                imageUrl: 'assets/icons/ic_withdraw.png',
-                                title: 'Tarik Tunai',
-                                color: kGraySoftColor,
-                                onTap: () {},
-                              ),
-                              HomeCardServicesItem(
-                                imageUrl: 'assets/icons/ic_history.png',
-                                title: 'More',
-                                color: kGraySoftColor,
-                                onTap: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                 ),
               ),

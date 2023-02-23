@@ -1,7 +1,9 @@
+import 'package:aipay/blocs/auth/auth_bloc.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/widgets/bank_item_widget.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TopUpScreens extends StatelessWidget {
   const TopUpScreens({super.key});
@@ -73,37 +75,47 @@ class TopUpScreens extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   color: kBlackSoftColor,
                 ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/icons/ic_plus_circle.png',
-                      color: kBlueAccerColor,
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '1202 1222 1111',
-                          style: whiteTextStyle.copyWith(
-                            fontSize: 18,
-                            fontWeight: semiBold,
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthSuccess) {
+                      return Row(
+                        children: [
+                          Image.asset(
+                            'assets/icons/ic_plus_circle.png',
+                            color: kBlueAccerColor,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Andini',
-                          style: whiteTextStyle.copyWith(
-                            fontWeight: medium,
+                          const SizedBox(
+                            width: 16,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                // RegExp class
+                                state.user.cardNumber!.replaceAllMapped(
+                                    RegExp(r".{4}"),
+                                    (match) => " ${match.group(0)}"),
+                                style: whiteTextStyle.copyWith(
+                                  fontSize: 18,
+                                  fontWeight: semiBold,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                state.user.name.toString(),
+                                style: whiteTextStyle.copyWith(
+                                  fontWeight: medium,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                    return Container();
+                  },
                 ),
               ),
               Text(

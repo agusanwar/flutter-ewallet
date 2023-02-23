@@ -1,7 +1,9 @@
+import 'package:aipay/blocs/auth/auth_bloc.dart';
 import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PinScreens extends StatefulWidget {
   const PinScreens({super.key});
@@ -12,6 +14,9 @@ class PinScreens extends StatefulWidget {
 
 class _PinScreensState extends State<PinScreens> {
   final TextEditingController pinController = TextEditingController(text: '');
+  String pin = '';
+  // error type pin
+  bool isError = false;
 
   // function reusable finction for pin
   addPin(String number) {
@@ -22,12 +27,17 @@ class _PinScreensState extends State<PinScreens> {
       });
       // print(pinController.text);
     }
+    // print(pinController.text);
     if (pinController.text.length == 6) {
-      if (pinController.text == '123456') {
+      // verification pin
+      if (pinController.text.length == 6 && pinController.text == pin) {
         Navigator.pop(context, true);
       } else {
-        showCustomSnackbar(
-            context, 'Pin yang anda masukan salah, silahkan coba lagi');
+        // text field pin error (danger text)
+        setState(() {
+          isError = true;
+        });
+        showCustomSnackbar(context, 'PIN yang anda masukan salah');
       }
     }
   }
@@ -35,10 +45,21 @@ class _PinScreensState extends State<PinScreens> {
   deletePin() {
     if (pinController.text.isNotEmpty) {
       setState(() {
+        isError = false;
         pinController.text =
             pinController.text.substring(0, pinController.text.length - 1);
       });
       // print(pinController.text);
+    }
+  }
+
+  // run for class pin
+  @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthSuccess) {
+      pin = authState.user.pin!;
     }
   }
 
@@ -79,6 +100,7 @@ class _PinScreensState extends State<PinScreens> {
                         fontSize: 36,
                         fontWeight: medium,
                         letterSpacing: 17,
+                        color: isError ? kRedColor : kGrayColor,
                       ),
                       decoration: InputDecoration(
                         disabledBorder: UnderlineInputBorder(
