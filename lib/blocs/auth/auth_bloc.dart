@@ -2,6 +2,7 @@ import 'package:aipay/models/signin_form_model.dart';
 import 'package:aipay/models/signup_form_model.dart';
 import 'package:aipay/models/user_edit_form.dart';
 import 'package:aipay/models/user_model.dart';
+import 'package:aipay/services/transaction_services.dart';
 import 'package:aipay/services/user_services.dart';
 import 'package:aipay/services/wallet_services.dart';
 import 'package:bloc/bloc.dart';
@@ -173,6 +174,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 e.toString(),
               ),
             );
+          }
+        }
+
+        if (event is AuthUpdateBalance) {
+          if (state is AuthSuccess) {
+            final currentBalance = (state as AuthSuccess).user;
+            // 3. update data
+            final updateBalance = currentBalance.copyWith(
+              balance: currentBalance.balance! + event.amount,
+            );
+            // 2. success
+            emit(AuthSuccess(updateBalance));
           }
         }
       },

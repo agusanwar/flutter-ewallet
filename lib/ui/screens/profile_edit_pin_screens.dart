@@ -16,6 +16,7 @@ class ProfileEditPinScreens extends StatefulWidget {
 class _ProfileEditPinScreensState extends State<ProfileEditPinScreens> {
   final oldPinController = TextEditingController(text: '');
   final newPinController = TextEditingController(text: '');
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

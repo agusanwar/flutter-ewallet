@@ -1,10 +1,9 @@
 class PaymentMethodModel {
-  final String? id;
+  final int? id;
   final String? name;
   final String? code;
   final String? thumbnail;
 
-  // constructor
   PaymentMethodModel({
     this.id,
     this.name,
@@ -12,12 +11,12 @@ class PaymentMethodModel {
     this.thumbnail,
   });
 
-  // data from json
+  // Contructor User model dari json
   factory PaymentMethodModel.fromJson(Map<String, dynamic> json) =>
       PaymentMethodModel(
-        id: json["id"],
-        name: json["name"],
-        code: json["code"],
+        id: json['id'],
+        name: json['name'],
+        code: json['code'],
         thumbnail: json['thumbnail'],
       );
 }

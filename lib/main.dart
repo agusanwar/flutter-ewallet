@@ -13,7 +13,6 @@ import 'package:aipay/ui/screens/signin_screen.dart';
 import 'package:aipay/ui/screens/signup_screens.dart';
 import 'package:aipay/ui/screens/signup_success_screens.dart';
 import 'package:aipay/ui/screens/splash_screens.dart';
-import 'package:aipay/ui/screens/top_up_amount_screens.dart';
 import 'package:aipay/ui/screens/top_up_screens.dart';
 import 'package:aipay/ui/screens/top_up_success_screens.dart';
 import 'package:aipay/ui/screens/transfer_amount_screens.dart';
@@ -55,7 +54,6 @@ class MyApp extends StatelessWidget {
           '/profile-edit-success': (context) =>
               const ProfileEditSuccessScreens(),
           '/top-up': (context) => const TopUpScreens(),
-          '/top-up-amount': (context) => const TopUpAmountScreens(),
           '/top-up-success': (context) => const TopUpSuccessScreens(),
           '/transfer': (context) => const TransferScreens(),
           '/transfer-amount': (context) => const TransferAmountScreens(),

@@ -1,13 +1,23 @@
 import 'package:aipay/blocs/auth/auth_bloc.dart';
+import 'package:aipay/blocs/payment_mathod/payment_mathod_bloc.dart';
+import 'package:aipay/models/payment_method_model.dart';
+import 'package:aipay/models/topup_form_model.dart';
 import 'package:aipay/shared/themes.dart';
+import 'package:aipay/ui/screens/top_up_amount_screens.dart';
 import 'package:aipay/ui/widgets/bank_item_widget.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TopUpScreens extends StatelessWidget {
+class TopUpScreens extends StatefulWidget {
   const TopUpScreens({super.key});
 
+  @override
+  State<TopUpScreens> createState() => _TopUpScreensState();
+}
+
+class _TopUpScreensState extends State<TopUpScreens> {
+  PaymentMethodModel? selectedPaymentMathod;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,30 +138,35 @@ class TopUpScreens extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              Column(
-                children: const [
-                  BankItem(
-                    imageUrl: 'assets/images/img_bca.png',
-                    title: 'Bank BCA',
-                    isSelected: true,
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/img_ocbc.png',
-                    title: 'Bank OCBC',
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/img_bni.png',
-                    title: 'Bank BNI',
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/404.png',
-                    title: 'Bank BII',
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/img_mandiri.png',
-                    title: 'Bank Mandiri',
-                  ),
-                ],
+              BlocProvider(
+                create: (context) =>
+                    PaymentMathodBloc()..add(PaymentMethodGet()),
+                child: BlocBuilder<PaymentMathodBloc, PaymentMathodState>(
+                  builder: (context, state) {
+                    // if success
+                    if (state is PaymentMathodSuccess) {
+                      return Column(
+                        children: state.paymentMethods.map((paymentMethod) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedPaymentMathod = paymentMethod;
+                              });
+                            },
+                            child: BankItem(
+                              paymentMethod: paymentMethod,
+                              isSelected:
+                                  paymentMethod.id == selectedPaymentMathod?.id,
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
               ),
               const SizedBox(
                 height: 15,
@@ -166,26 +181,6 @@ class TopUpScreens extends StatelessWidget {
               const SizedBox(
                 height: 15,
               ),
-              Column(
-                children: const [
-                  BankItem(
-                    imageUrl: 'assets/images/404.png',
-                    title: 'Indomart',
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/404.png',
-                    title: 'Alfa Mart',
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/404.png',
-                    title: 'QRIS',
-                  ),
-                  BankItem(
-                    imageUrl: 'assets/images/404.png',
-                    title: 'One Click',
-                  ),
-                ],
-              ),
               const SizedBox(
                 height: 60,
               ),
@@ -193,16 +188,26 @@ class TopUpScreens extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: CustomFilledButton(
-          title: 'Continue',
-          color: kBlueDarkColor,
-          onPressed: () {
-            Navigator.pushNamed(context, '/top-up-amount');
-          },
-        ),
-      ),
+      floatingActionButton: (selectedPaymentMathod != null)
+          ? Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: CustomFilledButton(
+                title: 'Continue',
+                color: kBlueDarkColor,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TopUpAmountScreens(
+                        data: TopUpFormModel(
+                            paymentMethodCode: selectedPaymentMathod?.code),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          : Container(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
