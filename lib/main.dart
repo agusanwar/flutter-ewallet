@@ -1,4 +1,5 @@
 import 'package:aipay/blocs/auth/auth_bloc.dart';
+import 'package:aipay/blocs/user/user_bloc.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/screens/home/main_screens.dart';
 import 'package:aipay/ui/screens/home/scan_qr_screens.dart';
@@ -33,6 +34,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           // ..add(AuthGetCurrentUser) but user success login
           create: (context) => AuthBloc()..add(AuthGetCurrentUser()),
+        ),
+        BlocProvider(
+          // ..add(AuthGetCurrentUser) but user success login
+          create: (context) => UserBloc(),
         ),
       ],
       child: MaterialApp(

@@ -1,18 +1,13 @@
+import 'package:aipay/models/user_model.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:flutter/material.dart';
 
 class TransferResaultUserItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String username;
-  final bool isVerifed;
+  final UserModel user;
   final bool isSelected;
   const TransferResaultUserItem({
     Key? key,
-    required this.imageUrl,
-    required this.name,
-    required this.username,
-    this.isVerifed = false,
+    required this.user,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -40,13 +35,12 @@ class TransferResaultUserItem extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                  imageUrl,
-                ),
-              ),
+                  fit: BoxFit.cover,
+                  image: user.profilePicture == null
+                      ? const AssetImage('assets/images/img_dummy.png')
+                      : NetworkImage(user.profilePicture!) as ImageProvider),
             ),
-            child: isVerifed
+            child: user.verified == 1
                 ? Align(
                     alignment: Alignment.topRight,
                     child: Container(
@@ -71,7 +65,7 @@ class TransferResaultUserItem extends StatelessWidget {
             height: 15,
           ),
           Text(
-            name,
+            user.name.toString().toUpperCase(),
             style: whiteTextStyle.copyWith(
               fontSize: 16,
               fontWeight: medium,
@@ -82,7 +76,7 @@ class TransferResaultUserItem extends StatelessWidget {
             height: 2,
           ),
           Text(
-            '@$username',
+            '@${user.username}',
             style: grayTextStyle.copyWith(
               fontSize: 12,
               fontWeight: regular,

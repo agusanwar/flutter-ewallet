@@ -1,18 +1,13 @@
+import 'package:aipay/models/user_model.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:flutter/material.dart';
 
 class TransferRecentUserItem extends StatelessWidget {
-  final String imageUrl;
-  final String name;
-  final String username;
-  final bool isVerified;
+  final UserModel user;
   final bool isSelected;
   const TransferRecentUserItem({
     Key? key,
-    required this.imageUrl,
-    required this.name,
-    required this.username,
-    this.isVerified = false,
+    required this.user,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -30,9 +25,17 @@ class TransferRecentUserItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image.asset(
-            imageUrl,
-            width: 40,
+          Container(
+            width: 45,
+            height: 45,
+            margin: const EdgeInsets.only(right: 15),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: user.profilePicture == null
+                      ? const AssetImage('assets/images/img_dummy.png')
+                      : NetworkImage(user.profilePicture!) as ImageProvider),
+            ),
           ),
           const SizedBox(
             width: 10,
@@ -40,20 +43,20 @@ class TransferRecentUserItem extends StatelessWidget {
           Column(
             children: [
               Text(
-                name,
+                user.name.toString().toUpperCase(),
                 style: whiteTextStyle.copyWith(
                   fontSize: 16,
                   fontWeight: medium,
                 ),
               ),
               Text(
-                '@$username',
+                '@${user.username.toString()}',
                 style: grayTextStyle.copyWith(fontSize: 12),
               )
             ],
           ),
           const Spacer(),
-          if (isVerified)
+          if (user.verified == 1)
             Row(
               children: [
                 Icon(
