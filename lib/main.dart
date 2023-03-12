@@ -61,7 +61,6 @@ class MyApp extends StatelessWidget {
           '/top-up': (context) => const TopUpScreens(),
           '/top-up-success': (context) => const TopUpSuccessScreens(),
           '/transfer': (context) => const TransferScreens(),
-          '/transfer-amount': (context) => const TransferAmountScreens(),
           '/transfer-success': (context) => const TransferSuccessScreens(),
           '/provider-item': (context) => const ProvideriItemScreens(),
           '/provider-payment-success': (context) =>

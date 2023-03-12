@@ -1,7 +1,9 @@
 import 'package:aipay/blocs/auth/auth_bloc.dart';
 import 'package:aipay/blocs/user/user_bloc.dart';
+import 'package:aipay/models/transfer_form_model.dart';
 import 'package:aipay/models/user_model.dart';
 import 'package:aipay/shared/themes.dart';
+import 'package:aipay/ui/screens/transfer_amount_screens.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';
 import 'package:aipay/ui/widgets/form_widget.dart';
 import 'package:aipay/ui/widgets/transfer_recent_user_item_widget.dart';
@@ -106,7 +108,14 @@ class _TransferScreensState extends State<TransferScreens> {
                 title: 'Continue',
                 color: kBlueDarkColor,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/transfer-amount');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TransferAmountScreens(
+                        data: TransferFormModel(sendTo: selectedUser!.username),
+                      ),
+                    ),
+                  );
                 },
               ),
             )
@@ -133,7 +142,20 @@ class _TransferScreensState extends State<TransferScreens> {
               if (state is UserSuccess) {
                 return Column(
                   children: state.users.map((user) {
-                    return TransferRecentUserItem(user: user);
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TransferAmountScreens(
+                                data: TransferFormModel(
+                                  sendTo: user.username,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: TransferRecentUserItem(user: user));
                   }).toList(),
                 );
               }

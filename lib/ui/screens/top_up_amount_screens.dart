@@ -91,6 +91,7 @@ class _TopUpAmountScreensState extends State<TopUpAmountScreens> {
               );
 
               // update amount in home
+              if (!mounted) return;
               context.read<AuthBloc>().add(
                     AuthUpdateBalance(
                       int.parse(
@@ -98,6 +99,7 @@ class _TopUpAmountScreensState extends State<TopUpAmountScreens> {
                       ),
                     ),
                   );
+              if (!mounted) return;
               Navigator.pushNamedAndRemoveUntil(
                   context, '/top-up-success', (route) => false);
             }
@@ -249,12 +251,14 @@ class _TopUpAmountScreensState extends State<TopUpAmountScreens> {
                   color: kBlueDarkColor,
                   onPressed: () async {
                     if (await Navigator.pushNamed(context, '/pin') == true) {
+                      if (!mounted) return;
                       final authState = context.read<AuthBloc>().state;
 
                       String pin = '';
                       if (authState is AuthSuccess) {
                         pin = authState.user.pin!;
                       }
+                      if (!mounted) return;
                       context.read<TopUpBloc>().add(
                             TopUpPost(
                               widget.data.copyWith(
