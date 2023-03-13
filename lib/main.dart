@@ -16,7 +16,6 @@ import 'package:aipay/ui/screens/signup_success_screens.dart';
 import 'package:aipay/ui/screens/splash_screens.dart';
 import 'package:aipay/ui/screens/top_up_screens.dart';
 import 'package:aipay/ui/screens/top_up_success_screens.dart';
-import 'package:aipay/ui/screens/transfer_amount_screens.dart';
 import 'package:aipay/ui/screens/transfer_screens.dart';
 import 'package:aipay/ui/screens/transfer_success_screens.dart';
 import 'package:flutter/material.dart';

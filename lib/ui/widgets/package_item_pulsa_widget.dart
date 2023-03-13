@@ -1,18 +1,17 @@
+import 'package:aipay/models/data_provider_model.dart';
 import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:flutter/material.dart';
 
 class PackageItemPulsa extends StatelessWidget {
-  final String title;
+  final DataProviderModel dataProvider;
   final String subTitle;
-  final int price;
   final bool isSelected;
 
   const PackageItemPulsa({
     Key? key,
-    required this.title,
+    required this.dataProvider,
     required this.subTitle,
-    required this.price,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -34,7 +33,7 @@ class PackageItemPulsa extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            dataProvider.name.toString().toUpperCase(),
             style: whiteTextStyle.copyWith(
               fontSize: 16,
               fontWeight: semiBold,
@@ -52,7 +51,7 @@ class PackageItemPulsa extends StatelessWidget {
             height: 3,
           ),
           Text(
-            formatCurrency(price),
+            formatCurrency(dataProvider.price ?? 0),
             style: yellowTextStyle.copyWith(
               fontSize: 15,
               fontWeight: semiBold,

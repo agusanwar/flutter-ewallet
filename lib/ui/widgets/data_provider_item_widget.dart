@@ -1,23 +1,22 @@
+import 'package:aipay/models/operator_card_model.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:flutter/material.dart';
 
 class DataProviderItem extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String subTitle;
+  final OperatorCardModel operatorCard;
   final bool isSelected;
   final VoidCallback? onTap;
+
   const DataProviderItem({
     super.key,
-    required this.imageUrl,
-    required this.title,
+    required this.operatorCard,
     this.isSelected = false,
-    required this.subTitle,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool imageNull = false;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -34,15 +33,23 @@ class DataProviderItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Image.asset(
-              imageUrl,
-              height: 30,
-            ),
+            imageNull == false
+                ? SizedBox(
+                    child: Image.asset(
+                      'assets/images/404.png',
+                      width: 30,
+                    ),
+                  )
+                : Image.network(
+                    operatorCard.thumbnail.toString(),
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  title,
+                  operatorCard.name.toString().toUpperCase(),
                   style: whiteTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: medium,
@@ -52,7 +59,7 @@ class DataProviderItem extends StatelessWidget {
                   height: 3,
                 ),
                 Text(
-                  subTitle,
+                  operatorCard.status.toString(),
                   style: grayTextStyle.copyWith(
                     fontSize: 12,
                     fontWeight: medium,

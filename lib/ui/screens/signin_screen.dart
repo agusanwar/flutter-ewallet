@@ -1,6 +1,5 @@
 import 'package:aipay/blocs/auth/auth_bloc.dart';
 import 'package:aipay/models/signin_form_model.dart';
-import 'package:aipay/models/signup_form_model.dart';
 import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';

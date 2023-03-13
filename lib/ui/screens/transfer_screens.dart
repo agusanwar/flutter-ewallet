@@ -1,4 +1,3 @@
-import 'package:aipay/blocs/auth/auth_bloc.dart';
 import 'package:aipay/blocs/user/user_bloc.dart';
 import 'package:aipay/models/transfer_form_model.dart';
 import 'package:aipay/models/user_model.dart';

@@ -6,8 +6,6 @@ part 'transaksi_state.dart';
 
 class TransaksiBloc extends Bloc<TransaksiEvent, TransaksiState> {
   TransaksiBloc() : super(TransaksiInitial()) {
-    on<TransaksiEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<TransaksiEvent>((event, emit) {});
   }
 }

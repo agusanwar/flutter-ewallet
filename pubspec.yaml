@@ -43,6 +43,8 @@ dependencies:
   image_picker: ^0.8.6+1
   # intl
   intl: ^0.17.0
+    # Loading animation widget
+  loading_animation_widget: ^1.2.0+2
   # Lottie Animation
   lottie: ^2.2.0
   # Url

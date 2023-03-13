@@ -1,3 +1,5 @@
+import 'package:aipay/models/data_provider_model.dart';
+import 'package:aipay/models/operator_card_model.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';
 import 'package:aipay/ui/widgets/form_widget.dart';
@@ -5,7 +7,11 @@ import 'package:aipay/ui/widgets/package_item_pulsa_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProviderPackageItemScreens extends StatefulWidget {
-  const ProviderPackageItemScreens({super.key});
+  final OperatorCardModel operatorCard;
+  const ProviderPackageItemScreens({
+    super.key,
+    required this.operatorCard,
+  });
 
   @override
   State<ProviderPackageItemScreens> createState() =>
@@ -14,6 +20,10 @@ class ProviderPackageItemScreens extends StatefulWidget {
 
 class _ProviderPackageItemScreensState extends State<ProviderPackageItemScreens>
     with SingleTickerProviderStateMixin {
+  final phoneController = TextEditingController(text: '');
+
+  DataProviderModel? selectedDataProvider;
+
   late TabController tabController;
   @override
   initState() {
@@ -68,9 +78,10 @@ class _ProviderPackageItemScreensState extends State<ProviderPackageItemScreens>
                   const SizedBox(
                     height: 10,
                   ),
-                  const CustomFormField(
+                  CustomFormField(
                     title: '+62',
                     isShowTitle: false,
+                    controlller: phoneController,
                   ),
                 ],
               ),
@@ -113,39 +124,22 @@ class _ProviderPackageItemScreensState extends State<ProviderPackageItemScreens>
                       child: Wrap(
                         spacing: 10,
                         runSpacing: 10,
-                        children: const [
-                          PackageItemPulsa(
-                            title: '5.000',
-                            subTitle: 'Harga',
-                            price: 65000,
-                            isSelected: true,
-                          ),
-                          PackageItemPulsa(
-                            title: '10.000',
-                            subTitle: 'Harga',
-                            price: 11500,
-                          ),
-                          PackageItemPulsa(
-                            title: '15.000',
-                            subTitle: 'Harga',
-                            price: 16500,
-                          ),
-                          PackageItemPulsa(
-                            title: '20.000',
-                            subTitle: 'Harga',
-                            price: 21000,
-                          ),
-                          PackageItemPulsa(
-                            title: '25.000',
-                            subTitle: 'Harga',
-                            price: 26000,
-                          ),
-                          PackageItemPulsa(
-                            title: '30.000',
-                            subTitle: 'Harga',
-                            price: 31000,
-                          ),
-                        ],
+                        children: widget.operatorCard.dataProvider!
+                            .map((dataProvider) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedDataProvider = dataProvider;
+                              });
+                            },
+                            child: PackageItemPulsa(
+                              dataProvider: dataProvider,
+                              subTitle: 'Harga',
+                              isSelected:
+                                  dataProvider.id == selectedDataProvider?.id,
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),
@@ -155,39 +149,11 @@ class _ProviderPackageItemScreensState extends State<ProviderPackageItemScreens>
                       child: Wrap(
                         spacing: 10,
                         runSpacing: 10,
-                        children: const [
-                          PackageItemPulsa(
-                            title: '5.000',
-                            subTitle: 'Harga',
-                            price: 65000,
-                            isSelected: true,
-                          ),
-                          PackageItemPulsa(
-                            title: '10.000',
-                            subTitle: 'Harga',
-                            price: 11500,
-                          ),
-                          PackageItemPulsa(
-                            title: '15.000',
-                            subTitle: 'Harga',
-                            price: 16500,
-                          ),
-                          PackageItemPulsa(
-                            title: '20.000',
-                            subTitle: 'Harga',
-                            price: 21000,
-                          ),
-                          PackageItemPulsa(
-                            title: '25.000',
-                            subTitle: 'Harga',
-                            price: 26000,
-                          ),
-                          PackageItemPulsa(
-                            title: '30.000',
-                            subTitle: 'Harga',
-                            price: 31000,
-                          ),
-                        ],
+                        children: widget.operatorCard.dataProvider!
+                            .map((dataProvider) {
+                          return PackageItemPulsa(
+                              dataProvider: dataProvider, subTitle: 'Harga');
+                        }).toList(),
                       ),
                     ),
                   ),

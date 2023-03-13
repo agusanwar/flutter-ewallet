@@ -1,13 +1,26 @@
+import 'package:aipay/blocs/auth/auth_bloc.dart';
+import 'package:aipay/blocs/operator_card/operator_card_bloc.dart';
+import 'package:aipay/models/operator_card_model.dart';
 import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/screens/provider_package_item_screens.dart';
 import 'package:aipay/ui/widgets/button_widget.dart';
 import 'package:aipay/ui/widgets/data_provider_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class ProvideriItemScreens extends StatelessWidget {
-  const ProvideriItemScreens({super.key});
+class ProvideriItemScreens extends StatefulWidget {
+  const ProvideriItemScreens({
+    super.key,
+  });
 
+  @override
+  State<ProvideriItemScreens> createState() => _ProvideriItemScreensState();
+}
+
+class _ProvideriItemScreensState extends State<ProvideriItemScreens> {
+  OperatorCardModel? selectedOperatorCard;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,39 +59,49 @@ class ProvideriItemScreens extends StatelessWidget {
                   const SizedBox(
                     width: 16,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '1202 1222 1111',
-                        style: whiteTextStyle.copyWith(
-                          fontSize: 18,
-                          fontWeight: semiBold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Andini, ',
-                            style: whiteTextStyle.copyWith(
-                              fontWeight: medium,
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthSuccess) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              // RegExp class
+                              state.user.cardNumber!.replaceAllMapped(
+                                  RegExp(r".{4}"),
+                                  (match) => " ${match.group(0)}"),
+                              style: whiteTextStyle.copyWith(
+                                fontSize: 18,
+                                fontWeight: semiBold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            'balance ${formatCurrency(120000)}',
-                            style: whiteTextStyle.copyWith(
-                              fontWeight: medium,
+                            const SizedBox(
+                              height: 5,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Row(
+                              children: [
+                                Text(
+                                  state.user.name.toString().toUpperCase(),
+                                  style: whiteTextStyle.copyWith(
+                                    fontWeight: medium,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'balance ${formatCurrency(state.user.balance ?? 0)}',
+                                  style: whiteTextStyle.copyWith(
+                                    fontWeight: medium,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }
+                      return Container();
+                    },
                   ),
                 ],
               ),
@@ -98,39 +121,64 @@ class ProvideriItemScreens extends StatelessWidget {
             Expanded(
               child: ListView(
                 scrollDirection: Axis.vertical,
-                children: const [
-                  DataProviderItem(
-                    imageUrl: 'assets/images/img_telkomsel.png',
-                    title: 'Telkomsel',
-                    subTitle: 'active',
-                    isSelected: true,
+                children: [
+                  BlocProvider(
+                    create: (context) =>
+                        OperatorCardBloc()..add(OperatorCardGet()),
+                    child: BlocBuilder<OperatorCardBloc, OperatorCardState>(
+                      builder: (context, state) {
+                        if (state is OperatorCardSuccess) {
+                          return Column(
+                            children: state.operatorCards.map((operatorCard) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedOperatorCard = operatorCard;
+                                  });
+                                },
+                                child: DataProviderItem(
+                                  operatorCard: operatorCard,
+                                  isSelected: operatorCard.id ==
+                                      selectedOperatorCard?.id,
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        }
+                        return Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                            color: kBlueDarkColor,
+                            size: 30,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  DataProviderItem(
-                    imageUrl: 'assets/images/img_telkomsel.png',
-                    title: 'Telkomsel',
-                    subTitle: 'active',
-                  )
                 ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(24),
-        child: CustomFilledButton(
-          title: 'Continue',
-          color: kBlueDarkColor,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ProviderPackageItemScreens(),
+      floatingActionButton: (selectedOperatorCard != null)
+          ? Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: CustomFilledButton(
+                title: 'Continue',
+                color: kBlueDarkColor,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProviderPackageItemScreens(
+                        operatorCard: selectedOperatorCard!,
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            )
+          : Container(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
