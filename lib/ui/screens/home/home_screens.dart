@@ -1,6 +1,11 @@
 import 'package:aipay/blocs/auth/auth_bloc.dart';
+import 'package:aipay/blocs/tips/tips_bloc.dart';
+import 'package:aipay/blocs/transaction/transaction_bloc.dart';
+import 'package:aipay/blocs/user/user_bloc.dart';
+import 'package:aipay/models/transfer_form_model.dart';
 import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
+import 'package:aipay/ui/screens/transfer_amount_screens.dart';
 import 'package:aipay/ui/widgets/home_card_information_widget.dart';
 import 'package:aipay/ui/widgets/home_card_service_item.dart';
 import 'package:aipay/ui/widgets/home_featured_service_item_widget.dart';
@@ -11,6 +16,7 @@ import 'package:aipay/ui/widgets/home_user_transaction_item_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class HomeScreens extends StatefulWidget {
   const HomeScreens({super.key});
@@ -22,6 +28,7 @@ class HomeScreens extends StatefulWidget {
 class _HomeScreensState extends State<HomeScreens> {
   // NOTE : Indicator
   int currentIndex = 0;
+  bool obsecureSaldo = true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -182,22 +189,40 @@ class _HomeScreensState extends State<HomeScreens> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                      formatCurrency(state.user.balance ?? 0),
-                                      // formatCurrency(state.user.balance ?? 0),
-                                      style: whiteTextStyle.copyWith(
-                                        fontSize: 16,
-                                        fontWeight: semiBold,
-                                        letterSpacing: 2,
-                                      ),
-                                    ),
+                                    obsecureSaldo == false
+                                        ? Text(
+                                            'Rp. xxx xxx',
+                                            // formatCurrency(state.user.balance ?? 0),
+                                            style: whiteTextStyle.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: semiBold,
+                                              letterSpacing: 2,
+                                            ),
+                                          )
+                                        : Text(
+                                            formatCurrency(
+                                                state.user.balance ?? 0),
+                                            // formatCurrency(state.user.balance ?? 0),
+                                            style: whiteTextStyle.copyWith(
+                                              fontSize: 16,
+                                              fontWeight: semiBold,
+                                              letterSpacing: 2,
+                                            ),
+                                          ),
                                     const SizedBox(
                                       width: 15,
                                     ),
-                                    Icon(
-                                      Icons.remove_red_eye_sharp,
-                                      size: 20,
-                                      color: kWhiteColor,
+                                    GestureDetector(
+                                      onTap: () {
+                                        obsecureSaldo = !obsecureSaldo;
+                                      },
+                                      child: Icon(
+                                        obsecureSaldo
+                                            ? Icons.remove_red_eye_rounded
+                                            : Icons.visibility_off_rounded,
+                                        size: 20,
+                                        color: kWhiteColor,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -574,7 +599,7 @@ class _HomeScreensState extends State<HomeScreens> {
                       width: currentIndex == 0 ? 30 : 10,
                       decoration: BoxDecoration(
                         shape: currentIndex == 0
-                            ? BoxShape.rectangle
+                            ? BoxShape.circle
                             : BoxShape.circle,
                         color:
                             currentIndex == 0 ? kYellowColor : kBlackSoftColor,
@@ -588,7 +613,7 @@ class _HomeScreensState extends State<HomeScreens> {
                       width: currentIndex == 1 ? 30 : 10,
                       decoration: BoxDecoration(
                         shape: currentIndex == 1
-                            ? BoxShape.rectangle
+                            ? BoxShape.circle
                             : BoxShape.circle,
                         color:
                             currentIndex == 1 ? kYellowColor : kBlackSoftColor,
@@ -602,7 +627,7 @@ class _HomeScreensState extends State<HomeScreens> {
                       width: currentIndex == 2 ? 30 : 10,
                       decoration: BoxDecoration(
                         shape: currentIndex == 2
-                            ? BoxShape.rectangle
+                            ? BoxShape.circle
                             : BoxShape.circle,
                         color:
                             currentIndex == 2 ? kYellowColor : kBlackSoftColor,
@@ -613,7 +638,7 @@ class _HomeScreensState extends State<HomeScreens> {
                       width: currentIndex == 3 ? 30 : 10,
                       decoration: BoxDecoration(
                         shape: currentIndex == 3
-                            ? BoxShape.rectangle
+                            ? BoxShape.circle
                             : BoxShape.circle,
                         color:
                             currentIndex == 3 ? kYellowColor : kBlackSoftColor,
@@ -654,13 +679,43 @@ class _HomeScreensState extends State<HomeScreens> {
                             padding: const EdgeInsets.only(
                               top: 20,
                               left: 14,
+                              right: 14,
                             ),
-                            child: Text(
-                              'Last Transaction',
-                              style: whiteTextStyle.copyWith(
-                                fontSize: 18,
-                                fontWeight: semiBold,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Last Transaction',
+                                  style: whiteTextStyle.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: semiBold,
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/last-transaction');
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'See All',
+                                        style: greenTextStyle.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: semiBold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Icon(
+                                        Icons
+                                            .keyboard_double_arrow_right_rounded,
+                                        color: kGreenColor,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           Padding(
@@ -671,35 +726,28 @@ class _HomeScreensState extends State<HomeScreens> {
                                 borderRadius: BorderRadius.circular(10),
                                 color: kDarkBackgraundColor.withOpacity(0.5),
                               ),
-                              child: Column(
-                                children: [
-                                  HomeLastTransaction(
-                                    imageUrl: 'assets/images/404.png',
-                                    title: 'Transfer',
-                                    color: kWhiteColor,
-                                    time: "23 Nov",
-                                    value:
-                                        '+ ${formatCurrency(45000, symbol: '')}',
-                                  ),
-                                  HomeLastTransaction(
-                                    imageUrl: 'assets/images/404.png',
-                                    title: 'Transfer',
-                                    color: kWhiteColor,
-                                    time: "23 Nov",
-                                    value:
-                                        '- ${formatCurrency(20000, symbol: '')}',
-//for value text Rp. Hidden Value text 45000
-                                  ),
-                                  HomeLastTransaction(
-                                    imageUrl: 'assets/images/404.png',
-                                    title: 'Transfer',
-                                    color: kWhiteColor,
-                                    time: "23 Nov",
-                                    value:
-                                        '- ${formatCurrency(10000, symbol: '')}',
-//for value text Rp. Hidden Value text 45000
-                                  )
-                                ],
+                              child: BlocProvider(
+                                create: (context) =>
+                                    TransactionBloc()..add(TransactionGet()),
+                                child: BlocBuilder<TransactionBloc,
+                                    TransactionState>(
+                                  builder: (context, state) {
+                                    if (state is TransactionSuccess) {
+                                      return Column(
+                                        children: state.transactions
+                                            .map((transaction) {
+                                          return HomeLastTransaction(
+                                            transaction: transaction,
+                                            color: kBlackSoftColor,
+                                          );
+                                        }).toList(),
+                                      );
+                                    }
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -760,29 +808,41 @@ class _HomeScreensState extends State<HomeScreens> {
                             ),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: const [
-                                  HomeUserTransactionItem(
-                                    imageUrl: 'assets/images/img_dummy.png',
-                                    username: '@aditia',
-                                  ),
-                                  HomeUserTransactionItem(
-                                    imageUrl: 'assets/images/img_dummy.png',
-                                    username: '@aditissssssssssssa',
-                                  ),
-                                  HomeUserTransactionItem(
-                                    imageUrl: 'assets/images/img_dummy.png',
-                                    username: '@aditia',
-                                  ),
-                                  HomeUserTransactionItem(
-                                    imageUrl: 'assets/images/img_dummy.png',
-                                    username: '@aditia',
-                                  ),
-                                  HomeUserTransactionItem(
-                                    imageUrl: 'assets/images/img_dummy.png',
-                                    username: '@aditia',
-                                  ),
-                                ],
+                              child: BlocProvider(
+                                create: (context) => UserBloc()
+                                  ..add(
+                                      UserGetRecent()), // if message modelinitial please add ini bloc ..add(event for bloc)
+                                child: BlocBuilder<UserBloc, UserState>(
+                                  builder: (context, state) {
+                                    if (state is UserSuccess) {
+                                      return Row(
+                                        children: state.users.map((user) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TransferAmountScreens(
+                                                    data: TransferFormModel(
+                                                      sendTo: user.username,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: HomeUserTransactionItem(
+                                              userTransaction: user,
+                                            ),
+                                          );
+                                        }).toList(),
+                                      );
+                                    }
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -847,31 +907,28 @@ class _HomeScreensState extends State<HomeScreens> {
                               borderRadius: BorderRadius.circular(20),
                               color: kBlackSoftColor,
                             ),
-                            child: Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: const [
-                                HomeTipsItem(
-                                  imageUrl: 'assets/images/img_cover1.png',
-                                  title: 'Best tips for using\na credit card',
-                                  url: 'https://unsplash.com/',
-                                ),
-                                HomeTipsItem(
-                                    imageUrl: 'assets/images/img_cover1.png',
-                                    title:
-                                        'Spot the good pie\nof finance model',
-                                    url: 'https://google.com/'),
-                                HomeTipsItem(
-                                  imageUrl: 'assets/images/img_cover1.png',
-                                  title: 'Best tips for using\na credit card',
-                                  url: 'https://youtube.com/',
-                                ),
-                                HomeTipsItem(
-                                  imageUrl: 'assets/images/img_cover1.png',
-                                  title: 'Best tips for using\na credit card',
-                                  url: 'information tips',
-                                ),
-                              ],
+                            child: BlocProvider(
+                              create: (context) => TipsBloc()..add(TipGet()),
+                              child: BlocBuilder<TipsBloc, TipsState>(
+                                builder: (context, state) {
+                                  if (state is TipsSuccess) {
+                                    return Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      children: state.tips.map((tip) {
+                                        return HomeTipsItem(tips: tip);
+                                      }).toList(),
+                                    );
+                                  }
+                                  return Center(
+                                    child: LoadingAnimationWidget
+                                        .staggeredDotsWave(
+                                      color: kWhiteColor,
+                                      size: 30,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           const SizedBox(

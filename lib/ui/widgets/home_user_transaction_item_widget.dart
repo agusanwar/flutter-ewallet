@@ -1,14 +1,13 @@
+import 'package:aipay/models/user_model.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:flutter/material.dart';
 
 class HomeUserTransactionItem extends StatelessWidget {
-  final String imageUrl;
-  final String username;
+  final UserModel userTransaction;
   const HomeUserTransactionItem({
     Key? key,
     // constuctor
-    required this.imageUrl,
-    required this.username,
+    required this.userTransaction,
   }) : super(key: key);
 
   @override
@@ -21,17 +20,24 @@ class HomeUserTransactionItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              imageUrl,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(
-              height: 5,
+            Container(
+              height: 45,
+              width: 45,
+              margin: const EdgeInsets.only(bottom: 5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: userTransaction.profilePicture == null
+                      ? const AssetImage('assets/images/img_dummy.png')
+                      : NetworkImage(
+                          userTransaction.profilePicture!,
+                        ) as ImageProvider,
+                ),
+              ),
             ),
             Text(
-              username,
+              '@${userTransaction.username}',
               style: grayTextStyle.copyWith(
                 fontSize: 12,
                 fontWeight: medium,

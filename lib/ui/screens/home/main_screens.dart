@@ -69,6 +69,7 @@ class _MainScreensState extends State<MainScreens> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
+              tooltip: "History",
               icon: Image.asset(
                 'assets/icons/ic_history.png',
                 width: 20,

@@ -3,6 +3,7 @@ import 'package:aipay/blocs/user/user_bloc.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:aipay/ui/screens/home/main_screens.dart';
 import 'package:aipay/ui/screens/home/scan_qr_screens.dart';
+import 'package:aipay/ui/screens/last_transaction.dart';
 import 'package:aipay/ui/screens/onboarding_screens.dart';
 import 'package:aipay/ui/screens/pin_screens.dart';
 import 'package:aipay/ui/screens/profile_edit_pin_screens.dart';
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
           '/provider-item': (context) => const ProvideriItemScreens(),
           '/provider-payment-success': (context) =>
               const ProviderPaymentSuccess(),
+          '/last-transaction': (context) => const LastTransaction(),
         },
       ),
     );

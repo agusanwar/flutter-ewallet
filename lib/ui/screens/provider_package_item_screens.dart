@@ -120,6 +120,7 @@ class _ProviderPackageItemScreensState extends State<ProviderPackageItemScreens>
                           title: '+62',
                           isShowTitle: false,
                           controlller: phoneController,
+                          keyBoardType: TextInputType.phone,
                         ),
                       ],
                     ),

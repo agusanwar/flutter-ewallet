@@ -39,7 +39,9 @@ class AuthServices {
       // condition success
       if (res.statusCode == 200) {
         UserModel user = UserModel.fromJson(jsonDecode(res.body));
-        user = user.copyWith(password: data.password);
+        user = user.copyWith(
+          password: data.password,
+        );
 
         // Auto Login
         await storeCredentialToLocal(user);

@@ -1,24 +1,20 @@
+import 'package:aipay/models/tips_model.dart';
 import 'package:aipay/shared/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
 class HomeTipsItem extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String url;
-  // final TipModel tip;
+  final TipsModel tips;
 
   const HomeTipsItem({
     Key? key,
-    // required this.tip,
-    required this.imageUrl,
-    required this.title,
-    required this.url,
+    required this.tips,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool imageNull = false;
     return Container(
       width: MediaQuery.of(context).size.width / 2.4,
       decoration: BoxDecoration(
@@ -30,10 +26,17 @@ class HomeTipsItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            child: Image.asset(
-              imageUrl,
-              fit: BoxFit.cover,
-            ),
+            child: imageNull == false
+                ? SizedBox(
+                    child: Image.asset(
+                      'assets/images/404.png',
+                      width: 30,
+                    ),
+                  )
+                : Image.network(
+                    tips.thumbnai.toString(),
+                    fit: BoxFit.cover,
+                  ),
           ),
           const SizedBox(
             height: 10,
@@ -44,8 +47,7 @@ class HomeTipsItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
-                  // tip.title.toString(),
+                  tips.title.toString(),
                   style: blackTextStyle.copyWith(
                     fontSize: 15,
                     fontWeight: semiBold,
@@ -58,8 +60,8 @@ class HomeTipsItem extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    if (await canLaunchUrl(Uri.parse(url.toString()))) {
-                      launchUrl(Uri.parse(url.toString()));
+                    if (await canLaunchUrl(Uri.parse(tips.url.toString()))) {
+                      launchUrl(Uri.parse(tips.url.toString()));
                     }
                   },
                   child: Container(
@@ -71,7 +73,7 @@ class HomeTipsItem extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(
-                          url,
+                          tips.url.toString(),
                           style: blueTextStyle.copyWith(
                             fontWeight: semiBold,
                           ),

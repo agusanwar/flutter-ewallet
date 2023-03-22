@@ -1,20 +1,17 @@
+import 'package:aipay/models/transaction_model.dart';
+import 'package:aipay/shared/shared_method.dart';
 import 'package:aipay/shared/themes.dart';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class HomeLastTransaction extends StatelessWidget {
-  final String imageUrl;
-  final String title;
+  final TransactionModel transaction;
   final Color color;
-  final String time;
-  final String value;
   const HomeLastTransaction({
     Key? key,
-    required this.imageUrl,
-    required this.title,
+    required this.transaction,
     required this.color,
-    required this.time,
-    required this.value,
   }) : super(key: key);
 
   @override
@@ -46,9 +43,8 @@ class HomeLastTransaction extends StatelessWidget {
                           width: 30,
                         ),
                       )
-                    : Image.asset(
-                        'assets/images/404.png',
-                        width: 30,
+                    : Image.network(
+                        transaction.transactionType!.thumbnail!,
                       ),
               ),
             ),
@@ -68,7 +64,7 @@ class HomeLastTransaction extends StatelessWidget {
                           ),
                         )
                       : Text(
-                          title,
+                          transaction.transactionType!.name!,
                           style: whiteTextStyle.copyWith(
                             fontSize: 16,
                             fontWeight: medium,
@@ -87,7 +83,8 @@ class HomeLastTransaction extends StatelessWidget {
                           ),
                         )
                       : Text(
-                          time,
+                          DateFormat('MMM dd')
+                              .format(transaction.createdAt ?? DateTime.now()),
                           // DateFormat('MMM dd')
                           //     .format(transactions.createdAt ?? DateTime.now()),
                           style: grayTextStyle.copyWith(
@@ -107,15 +104,18 @@ class HomeLastTransaction extends StatelessWidget {
                     ),
                   )
                 : Text(
-                    value,
-                    // formatCurrency(transactions.amount ?? 0,
-                    //     symbol: transactions.transactionType!.action == 'cr'
-                    //         ? '+ '
-                    //         : '- '),
+                    formatCurrency(
+                      transaction.amount ?? 0,
+                      symbol: transaction.transactionType!.action == 'cr'
+                          ? '+'
+                          : '-',
+                    ),
                     style: blackTextStyle.copyWith(
                       fontSize: 12,
                       fontWeight: medium,
-                      color: kGreenColor,
+                      color: transaction.transactionType!.action == 'cr'
+                          ? kGreenColor
+                          : kRedColor,
                     ),
                   ),
           ],

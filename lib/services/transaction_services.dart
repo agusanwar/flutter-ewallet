@@ -86,7 +86,6 @@ class TransactionServices {
       final token = await AuthServices().getToken();
 
       // get url API
-      // get url API
       final res = await http.get(
         Uri.parse(
           '$baseUrl/transactions',

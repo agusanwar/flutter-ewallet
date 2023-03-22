@@ -135,7 +135,7 @@ class _SignUpUSetProfileScreensState extends State<SignUpUSetProfileScreens> {
                     bottom: 30,
                   ),
                   child: Text(
-                    'Angelina Stevani',
+                    '${widget.data.name}',
                     style: whiteTextStyle.copyWith(
                       fontSize: 18,
                       fontWeight: medium,
@@ -165,7 +165,7 @@ class _SignUpUSetProfileScreensState extends State<SignUpUSetProfileScreens> {
                               pin: pinController.text,
                               profilePicture: selectedImage == null
                                   ? null
-                                  : 'data/image/png;base64,${base64Encode(
+                                  : 'data:image/png;base64,${base64Encode(
                                       File(selectedImage!.path)
                                           .readAsBytesSync(),
                                     )}',
